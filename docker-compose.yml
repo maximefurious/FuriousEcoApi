@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  prepare-app:
+    image: maven:3.9.4-eclipse-temurin-21
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: >
+      bash -c "rm -rf target &&
+               mvn clean install"
+
+  springboot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - prepare-app
+    restart: always
